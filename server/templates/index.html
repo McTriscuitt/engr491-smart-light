@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0d0d0d">
+  <meta name="robots" content="noindex, nofollow">
+  <title>ENGR 491 Smart Light (Prototype)</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <script src="{{ url_for('static', filename='dashboard.js') }}" defer></script>
+</head>
+<body>
+<main>
+  <h1>ENGR 491 Smart Light (Prototype)</h1>
+
+  <section class="card" aria-labelledby="board-label">
+    <div class="label" id="board-label">Board</div>
+    <div class="board-row">
+      <span class="board-name" id="board-name">—</span>
+      <span class="chip" id="board-online">—</span>
+    </div>
+    <div class="detail" id="board-seen">—</div>
+    <div class="meta" id="board-meta">—</div>
+  </section>
+
+  <section class="ping" aria-label="Ping">
+    <button class="btn btn-primary" id="ping-btn" type="button">Ping</button>
+    <div class="caption">Simulates someone trying to reach you.</div>
+    <div class="message" id="ping-message" role="status" aria-live="polite"></div>
+  </section>
+
+  <section aria-labelledby="last-ping-label">
+    <div class="label" id="last-ping-label">Last ping</div>
+    <div class="stats">
+      <div class="stat"><div class="label">Status</div><div class="stat-value" id="ping-status">—</div></div>
+      <div class="stat"><div class="label">Board</div><div class="stat-value" id="ping-board">—</div></div>
+      <div class="stat"><div class="label">Delivery</div><div class="stat-value" id="ping-delivery">—</div></div>
+      <div class="stat"><div class="label">Round trip</div><div class="stat-value" id="ping-rtt">—</div></div>
+      <div class="stat"><div class="label">Clicked</div><div class="stat-value" id="ping-time">—</div></div>
+    </div>
+  </section>
+
+  <p class="footer" id="conn-error" hidden>Can't reach the server. Retrying…</p>
+</main>
+</body>
+</html>

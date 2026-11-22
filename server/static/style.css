@@ -1,0 +1,138 @@
+/* Minimal dark styling. Readable on a phone; polish isn't a goal this iteration. */
+
+:root {
+  --bg: #0d0d0d;
+  --panel: #141414;
+  --panel-hover: #1a1a1a;
+  --panel-active: #1e1e1e;
+  --line: #2a2a2a;
+  --line-strong: #777;
+
+  --bright: #f5f5f5;
+  --text: #e0e0e0;
+  --muted: #8a8a8a;
+  --faint: #555;
+
+  --accent: #f0b35a;
+  --ok: #8fc79a;
+  --error: #e0796b;
+
+  --sans: system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { background: var(--bg); }
+
+body {
+  min-height: 100vh;
+  min-height: 100dvh;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--sans);
+  line-height: 1.5;
+  padding: 56px 32px 40px;
+  -webkit-font-smoothing: antialiased;
+}
+
+main { max-width: 640px; margin: 0 auto; }
+
+h1 {
+  font-size: 18px;
+  font-weight: 400;
+  letter-spacing: 0.04em;
+  color: var(--bright);
+  margin-bottom: 40px;
+}
+
+.label {
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--faint);
+  margin-bottom: 12px;
+}
+
+/* Board card */
+.card { background: var(--panel); padding: 24px; margin-bottom: 40px; }
+.board-row { display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+.board-name {
+  font-size: 26px;
+  font-weight: 300;
+  color: var(--bright);
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.detail { font-size: 14px; color: var(--muted); margin-top: 8px; font-variant-numeric: tabular-nums; }
+.meta { font-size: 12px; color: var(--faint); margin-top: 4px; }
+
+.chip {
+  flex-shrink: 0;
+  border: 1px solid var(--line);
+  color: var(--faint);
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  padding: 6px 14px;
+}
+.chip.is-on { border-color: var(--ok); color: var(--ok); }
+.chip.is-off { border-color: var(--line); color: var(--error); }
+
+/* Ping */
+.ping { text-align: center; margin-bottom: 40px; }
+.btn {
+  appearance: none;
+  background: none;
+  border: 1px solid var(--accent);
+  color: var(--accent);
+  font: inherit;
+  font-size: 14px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  padding: 14px 48px;
+  min-height: 48px;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s, border-color 0.15s;
+}
+@media (hover: hover) { .btn:hover:not(:disabled) { background: var(--panel-hover); } }
+.btn:active:not(:disabled) { background: var(--panel-active); }
+.btn:disabled { opacity: 0.35; cursor: default; }
+.btn:focus-visible { outline: 1px solid var(--accent); outline-offset: 3px; }
+.caption { font-size: 12px; color: var(--faint); margin-top: 12px; }
+.message { font-size: 14px; color: var(--error); margin-top: 8px; min-height: 1.5em; }
+
+/* Last ping */
+.stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+  gap: 2px;
+}
+.stat { background: var(--panel); padding: 16px 16px; min-width: 0; }
+.stat .label { margin-bottom: 6px; }
+.stat-value {
+  font-size: 20px;
+  font-weight: 300;
+  color: var(--text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-variant-numeric: tabular-nums;
+}
+.stat-value[data-status="completed"] { color: var(--ok); }
+.stat-value[data-status="expired"],
+.stat-value[data-status="failed"] { color: var(--error); }
+
+.footer { margin-top: 32px; font-size: 12px; color: var(--error); text-align: center; }
+
+[hidden] { display: none !important; }
+
+@media (max-width: 600px) {
+  body { padding: 32px 16px; }
+  h1 { margin-bottom: 28px; }
+  .btn { width: 100%; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { transition: none !important; }
+}
