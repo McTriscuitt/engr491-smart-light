@@ -119,6 +119,10 @@ Alex owns the circuit and the wiring diagram. This section records the electrica
 | Relay driver | D2 | GPIO5 | To PN2222 base through a resistor. HIGH = relay energized |
 | Status (RGB) | LED_RED / LED_GREEN / LED_BLUE | 46 / 0 / 45 | Onboard, active-low |
 
+
+<img width="1082" height="783" alt="image" src="https://github.com/user-attachments/assets/0f454430-803d-4f85-8d77-bfd99e2c8d18" />
+
+
 Firmware uses Arduino pin names (`D2`, `D3`) with the core's default "by Arduino pin" numbering.
 
 ### 4.3 Circuit constraints (reference for Alex, not a diagram)
