@@ -1,0 +1,11 @@
+# arduino-cli profile with pinned versions (DESIGN.md 5.1).
+# Alex: install these same versions in the Arduino IDE (Boards Manager / Library Manager).
+profiles:
+  nano_esp32:
+    fqbn: arduino:esp32:nano_nora
+    platforms:
+      - platform: arduino:esp32 (2.0.18-arduino.5)
+    libraries:
+      - ArduinoJson (7.4.3)
+
+default_profile: nano_esp32

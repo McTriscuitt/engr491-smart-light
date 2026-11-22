@@ -264,6 +264,7 @@ duty 0 → relay OFF
   openssl s_client -connect <SERVER_HOST>:443 -servername <SERVER_HOST> -showcerts </dev/null
   ```
   On Windows, Git Bash includes `openssl`. Identify the issuing **root** CA from the chain, download that root's PEM from the CA's official site, and place it in `root_ca.h`. Pin the root, not the leaf, so certificate renewals don't break the board. If the chain could end at more than one root (cross-signed), concatenate both root PEMs into the one string.
+- **[Design] What was pinned (2026-11-22):** Railway serves `*.up.railway.app` ← Let's Encrypt YE2 ← Root YE (cross-signed by ISRG Root X2) ← ISRG Root X2 (cross-signed by ISRG Root X1). `root_ca.h` holds all three roots: X1, X2 and Root YE. Each verified the live chain on its own, so the board keeps working if Let's Encrypt shortens the chain.
 - **Fallback, last resort only:** if verification blocks the deadline, build with `TLS_VERIFY 0`, which calls `client.setInsecure()`. The board must then print a loud warning at boot. The submission write-up must state that verification is temporarily off. Default is `TLS_VERIFY 1`.
 
 ---

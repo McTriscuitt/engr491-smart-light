@@ -69,14 +69,59 @@ The start command is `gunicorn app:app --workers 1 --threads 4 --bind 0.0.0.0:$P
 
 ## Firmware
 
-Coming in Phase 2 (DESIGN.md Section 5). Copy `firmware/engr491_smart_light/secrets.example.h` to `secrets.h` and fill in your Wi-Fi details, the board's token and the server hostname. `secrets.h` is gitignored.
+Arduino sketch for the Arduino Nano ESP32 (DESIGN.md Section 5).
+
+### Secrets
+
+Copy `firmware/engr491_smart_light/secrets.example.h` to `secrets.h` in the same folder and fill in:
+
+- `WIFI_SSID` / `WIFI_PASSWORD`: a **2.4 GHz** network (the board can't join a 5 GHz-only network)
+- `DEVICE_TOKEN`: this board's token (the same one listed for your name in Railway's `DEVICE_TOKENS`)
+- `SERVER_HOST`: the Railway hostname only, without `https://`
+
+`secrets.h` is gitignored. Never commit it.
 
 ### Pinned versions
 
 | Component | Version |
 |---|---|
-| Arduino ESP32 Boards (`arduino:esp32`) | TBD (Phase 2) |
-| ArduinoJson | TBD (Phase 2) |
+| Arduino ESP32 Boards (`arduino:esp32`) | 2.0.18-arduino.5 |
+| ArduinoJson (Benoit Blanchon) | 7.4.3 |
+| Board (FQBN) | Arduino Nano ESP32 (`arduino:esp32:nano_nora`) |
+| Built with | arduino-cli 1.6.0 |
+
+`firmware/engr491_smart_light/sketch.yaml` pins these as the default arduino-cli profile. The installed core is ESP32 Arduino core 2.x, so PWM uses `ledcSetup`/`ledcAttachPin`. Only `light.cpp` would change for core 3.x.
+
+### Build and upload (arduino-cli)
+
+```bash
+arduino-cli core install arduino:esp32@2.0.18-arduino.5
+arduino-cli lib install ArduinoJson@7.4.3
+arduino-cli compile --fqbn arduino:esp32:nano_nora firmware/engr491_smart_light
+arduino-cli upload  --fqbn arduino:esp32:nano_nora -p COMx firmware/engr491_smart_light
+arduino-cli monitor -p COMx -c baudrate=115200
+```
+
+Find the port with `arduino-cli board list`.
+
+### Arduino IDE (Alex)
+
+1. Boards Manager: install **Arduino ESP32 Boards** version **2.0.18-arduino.5**.
+2. Library Manager: install **ArduinoJson** version **7.4.3**.
+3. Create `secrets.h` (above), open `firmware/engr491_smart_light/engr491_smart_light.ino`, select **Arduino Nano ESP32** and its port, then Upload.
+4. Open Serial Monitor at 115200 baud.
+
+**Upload trouble:** the Nano ESP32 uploads over DFU. If an upload fails or the board stops responding, double-press RESET to enter bootloader mode and retry.
+
+### What you should see
+
+- **Onboard RGB:** blinks blue while connecting, shows green once when connected, then turns off. Solid red means Wi-Fi failed, and the board retries after 5 s. The 5 mm LED stays off at boot.
+- **Serial:** a `[boot]` line, `[wifi]` status, `[time] syncing ... ok`, then quiet polling. A ping prints `[ping] <id>: running pattern` and `acked`. `token rejected (401)` means the token doesn't match Railway's `DEVICE_TOKENS`.
+- **If green and blue look swapped** (some early boards), swap `PIN_RGB_GREEN` and `PIN_RGB_BLUE` in `config.h`.
+
+### Certificate verification
+
+The board checks the server certificate against `root_ca.h`. That file pins the Let's Encrypt roots the Railway chain can end at: ISRG Root X1, ISRG Root X2 and Root YE. `TLS_VERIFY` in `config.h` must stay `1`. `0` is a last-resort fallback that turns verification off and prints a warning at boot.
 
 ## Security notes
 
